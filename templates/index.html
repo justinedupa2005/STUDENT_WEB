@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% block content %}
+<div class="w3-row-padding">
+  <div class="w3-third">
+    <div class="w3-card-4 w3-container w3-padding">
+      <fieldset>
+        <legend><b>STUDENT INFORMATION</b></legend>
+        <form method="post" action="{% if student %}{{ url_for('update_student', idno=student.idno) }}{% else %}{{ url_for('add_student') }}{% endif %}">
+        <center>
+            <img src="../static/images/user profile image.YgN6-oQ4KzYkxJScaAZ4jgHaHa" />
+        </center>
+
+        <p>
+            <label><b>IDNO</b></label>
+            <input
+            type="number"
+            name="idno"
+            id="idno"
+            class="w3-input w3-border"
+            required
+            value="{{ student.idno if student else '' }}"
+            />
+        </p>
+
+        <p>
+            <label><b>LASTNAME</b></label>
+            <input
+            type="text"
+            name="lastname"
+            id="lastname"
+            class="w3-input w3-border"
+            required
+            value="{{ student.lastname if student else '' }}"
+            />
+        </p>
+
+        <p>
+            <label><b>FIRSTNAME</b></label>
+            <input
+            type="text"
+            name="firstname"
+            id="firstname"
+            class="w3-input w3-border"
+            required
+            value="{{ student.firstname if student else '' }}"
+            />
+        </p>
+
+        <p>
+            <label><b>COURSE</b></label>
+            <select name="course" id="course" class="w3-input w3-border required">
+            <option value="bsit" {% if student and student.course == 'bsit' %}selected{% endif %}>INFORMATION TECHNOLOGY</option>
+            <option value="bscs" {% if student and student.course == 'bscs' %}selected{% endif %}>COMPUTER SCIENCE</option>
+            <option value="bscpe" {% if student and student.course == 'bscpe' %}selected{% endif %}>COMPUTER ENGINEERING</option>
+            <option value="bshm" {% if student and student.course == 'bshm' %}selected{% endif %}>HOSPITALITY MANAGEMENT</option>
+            <option value="bscj" {% if student and student.course == 'bscj' %}selected{% endif %}>CRIMINAL JUSTICE</option>
+            </select>
+        </p>
+
+        <p>
+            <label><b>LEVEL</b></label>
+            <select name="level" id="level" class="w3-input w3-border required">
+            <option value="1" {% if student and student.level == '1' %}selected{% endif %}>FIRST YEAR</option>
+            <option value="2" {% if student and student.level == '2' %}selected{% endif %}>SECOND YEAR</option>
+            <option value="3" {% if student and student.level == '3' %}selected{% endif %}>THIRD YEAR</option>
+            <option value="4" {% if student and student.level == '4' %}selected{% endif %}>FOURTH YEAR</option>
+            </select>
+        </p>
+
+        <p class="w3-right">
+            <input type="submit" value="SAVE" class="w3-button w3-blue" />
+            {% if student %}
+            <a href="{{ url_for('index') }}" class="w3-button w3-green">CANCEL</a>
+            {% else %}
+            <input type="reset" value="CANCEL" class="w3-button w3-green" />
+            {% endif %}
+        </p>
+        </form>
+      </fieldset>
+    </div>
+  </div>
+  <div class="w3-twothird">
+    <table class="w3-table-all w3-card-4">
+      <tr>
+        <th>IDNO</th>
+        <th class="w3-hide-small w3-hide-medium">LASTNAME</th>
+        <th class="w3-hide-small w3-hide-medium">FIRSTNAME</th>
+        <th class="w3-hide-large">NAME</th>
+
+        <th class="w3-hide-small w3-hide-medium">COURSE</th>
+        <th class="w3-hide-small w3-hide-medium">LEVEL</th>
+        <th class="w3-hide-large">COURSE & LEVEL</th>
+
+        <th>ACTION</th>
+        {% for student in studentlist %}
+        <tr>
+            <td>{{  student['idno'] }}</td> 
+            <td class="w3-hide-small w3-hide-medium">{{  student['lastname'].upper() }}</td> 
+            <td class="w3-hide-small w3-hide-medium">{{  student['firstname'].upper() }}</td> 
+            <td class="w3-hide-large">{{  student['lastname'] }},{{  student['firstname'].upper() }}</td> 
+
+            <td class="w3-hide-small w3-hide-medium">{{  student['course'].upper() }}</td> 
+            <td class="w3-hide-small w3-hide-medium">{{  student['level'] }}</td> 
+            <td class="w3-hide-large">{{  student['course'] }},{{  student['level'] }}</td> 
+            <td>
+                <a href="{{ url_for('update_student', idno=student['idno']) }}" class="w3-button w3-green" style="width: 30px !important; height: 30px !important; padding: 0 !important; text-align: center; line-height: 30px;">&#128393;</a>
+                <a href="{{ url_for('delete_student', idno=student['idno']) }}" class="w3-button w3-red" style="width: 30px !important; height: 30px !important; padding: 0 !important; text-align: center; line-height: 30px;">&#128465;</a>
+            </td>
+        </tr>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+</div>
+{% endblock %}
