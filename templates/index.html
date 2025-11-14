@@ -4,76 +4,90 @@
     <div class="w3-card-4 w3-container w3-padding">
       <fieldset>
         <legend><b>STUDENT INFORMATION</b></legend>
-        <form method="post" action="{% if student %}{{ url_for('update_student', idno=student.idno) }}{% else %}{{ url_for('add_student') }}{% endif %}">
-        <center>
-            <img src="../static/images/user profile image.YgN6-oQ4KzYkxJScaAZ4jgHaHa" />
-        </center>
-
-        <p>
-            <label><b>IDNO</b></label>
-            <input
-            type="number"
-            name="idno"
-            id="idno"
-            class="w3-input w3-border"
-            required
-            value="{{ student.idno if student else '' }}"
-            />
-        </p>
-
-        <p>
-            <label><b>LASTNAME</b></label>
-            <input
-            type="text"
-            name="lastname"
-            id="lastname"
-            class="w3-input w3-border"
-            required
-            value="{{ student.lastname if student else '' }}"
-            />
-        </p>
-
-        <p>
-            <label><b>FIRSTNAME</b></label>
-            <input
-            type="text"
-            name="firstname"
-            id="firstname"
-            class="w3-input w3-border"
-            required
-            value="{{ student.firstname if student else '' }}"
-            />
-        </p>
-
-        <p>
-            <label><b>COURSE</b></label>
-            <select name="course" id="course" class="w3-input w3-border required">
-            <option value="bsit" {% if student and student.course == 'bsit' %}selected{% endif %}>INFORMATION TECHNOLOGY</option>
-            <option value="bscs" {% if student and student.course == 'bscs' %}selected{% endif %}>COMPUTER SCIENCE</option>
-            <option value="bscpe" {% if student and student.course == 'bscpe' %}selected{% endif %}>COMPUTER ENGINEERING</option>
-            <option value="bshm" {% if student and student.course == 'bshm' %}selected{% endif %}>HOSPITALITY MANAGEMENT</option>
-            <option value="bscj" {% if student and student.course == 'bscj' %}selected{% endif %}>CRIMINAL JUSTICE</option>
-            </select>
-        </p>
-
-        <p>
-            <label><b>LEVEL</b></label>
-            <select name="level" id="level" class="w3-input w3-border required">
-            <option value="1" {% if student and student.level == '1' %}selected{% endif %}>FIRST YEAR</option>
-            <option value="2" {% if student and student.level == '2' %}selected{% endif %}>SECOND YEAR</option>
-            <option value="3" {% if student and student.level == '3' %}selected{% endif %}>THIRD YEAR</option>
-            <option value="4" {% if student and student.level == '4' %}selected{% endif %}>FOURTH YEAR</option>
-            </select>
-        </p>
-
-        <p class="w3-right">
-            <input type="submit" value="SAVE" class="w3-button w3-blue" />
-            {% if student %}
-            <a href="{{ url_for('index') }}" class="w3-button w3-green">CANCEL</a>
+        <form method="post" enctype="multipart/form-data" action="{% if student %}{{ url_for('update_student', idno=student.idno) }}{% else %}{{ url_for('add_student') }}{% endif %}">
+          <center>
+            {% if student and student.image %}
+              <img id="profilePreview"
+                  src="{{ url_for('static', filename='uploads/' ~ student.image) }}" 
+                  alt="Profile Image" width="200" height="200" style="border-radius: 50%; object-fit: cover;">
             {% else %}
-            <input type="reset" value="CANCEL" class="w3-button w3-green" />
+              <img id="profilePreview"
+                  src="{{ url_for('static', filename='images/user_profile.png') }}" 
+                  alt="Default Profile" width="200" height="200" style="border-radius: 50%; object-fit: cover;">
             {% endif %}
-        </p>
+          </center>
+
+          <p>
+            <label><b>UPLOAD IMAGE</b></label>
+            <input type="file" name="image" accept="image/*" class="w3-input w3-border"
+                  onchange="previewImage(event)">
+          </p>
+
+          <p>
+              <label><b>IDNO</b></label>
+              <input
+              type="number"
+              name="idno"
+              id="idno"
+              class="w3-input w3-border"
+              required
+              value="{{ student.idno if student else '' }}"
+              />
+          </p>
+
+          <p>
+              <label><b>LASTNAME</b></label>
+              <input
+              type="text"
+              name="lastname"
+              id="lastname"
+              class="w3-input w3-border"
+              required
+              value="{{ student.lastname if student else '' }}"
+              />
+          </p>
+
+          <p>
+              <label><b>FIRSTNAME</b></label>
+              <input
+              type="text"
+              name="firstname"
+              id="firstname"
+              class="w3-input w3-border"
+              required
+              value="{{ student.firstname if student else '' }}"
+              />
+          </p>
+
+          <p>
+              <label><b>COURSE</b></label>
+              <select name="course" id="course" class="w3-input w3-border required">
+              <option value="bsit" {% if student and student.course == 'bsit' %}selected{% endif %}>INFORMATION TECHNOLOGY</option>
+              <option value="bscs" {% if student and student.course == 'bscs' %}selected{% endif %}>COMPUTER SCIENCE</option>
+              <option value="bscpe" {% if student and student.course == 'bscpe' %}selected{% endif %}>COMPUTER ENGINEERING</option>
+              <option value="bshm" {% if student and student.course == 'bshm' %}selected{% endif %}>HOSPITALITY MANAGEMENT</option>
+              <option value="bscj" {% if student and student.course == 'bscj' %}selected{% endif %}>CRIMINAL JUSTICE</option>
+              </select>
+          </p>
+
+          <p>
+              <label><b>LEVEL</b></label>
+              <select name="level" id="level" class="w3-input w3-border required">
+              <option value="1" {% if student and student.level == '1' %}selected{% endif %}>FIRST YEAR</option>
+              <option value="2" {% if student and student.level == '2' %}selected{% endif %}>SECOND YEAR</option>
+              <option value="3" {% if student and student.level == '3' %}selected{% endif %}>THIRD YEAR</option>
+              <option value="4" {% if student and student.level == '4' %}selected{% endif %}>FOURTH YEAR</option>
+              </select>
+          </p>
+
+          <p class="w3-right">
+              <input type="submit" value="SAVE" class="w3-button w3-blue" />
+              {% if student %}
+              <a href="{{ url_for('index') }}" class="w3-button w3-green">CANCEL</a>
+              {% else %}
+              <input type="reset" value="CANCEL" class="w3-button w3-green" />
+              {% endif %}
+          </p>
         </form>
       </fieldset>
     </div>
@@ -111,4 +125,13 @@
     </table>
   </div>
 </div>
+
+<script>
+function previewImage(event) {
+  const file = event.target.files[0];
+  const img = document.getElementById('profilePreview');
+  if (file) img.src = URL.createObjectURL(file);
+}
+</script>
+
 {% endblock %}
